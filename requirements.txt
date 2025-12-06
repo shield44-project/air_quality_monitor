@@ -1,0 +1,5 @@
+flask==3.0.3
+pyserial==3.5  # Optional (disabled on Vercel)
+numpy==2.1.1
+plotly==5.24.1
+pandas==2.2.3

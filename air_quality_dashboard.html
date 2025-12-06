@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌆 Pollution Absorbing Adaptive Streetlight Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .section { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin: 20px 0; padding: 25px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        h1 { text-align: center; font-size: 2.5em; margin-bottom: 10px; }
+        h2 { color: #fff; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        th { background: rgba(255,255,255,0.2); }
+        #aqi-display { font-size: 3em; font-weight: bold; text-align: center; margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; }
+        #latest-mq { text-align: center; font-size: 1.2em; }
+        form { max-width: 500px; margin: 0 auto; }
+        input, textarea, button { width: 100%; padding: 12px; margin: 10px 0; box-sizing: border-box; border: none; border-radius: 8px; font-size: 1em; }
+        textarea { height: 120px; resize: vertical; }
+        button { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; cursor: pointer; font-weight: bold; transition: transform 0.2s; }
+        button:hover { transform: scale(1.02); }
+        #graph { background: rgba(0,0,0,0.3); border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🌆 Pollution Absorbing Adaptive Lighting Streetlight</h1>
+    <p style="text-align: center; opacity: 0.9;">Real-time air quality monitoring with smart purification</p>
+    
+    <!-- Current AQI -->
+    <div class="section">
+        <h2>📊 Current Air Quality</h2>
+        <div id="aqi-display">AQI: -- | Level: --</div>
+        <p id="latest-mq">Latest MQ Sensor Value: --</p>
+    </div>
+    
+    <!-- Real-Time Graph -->
+    <div class="section">
+        <h2>📈 Real-Time Graph (Last 60 Seconds)</h2>
+        <div id="graph"></div>
+    </div>
+    
+    <!-- Gases Table -->
+    <div class="section">
+        <h2>🧪 Detected Gases & How We Fix Them (MQ-135 Sensor)</h2>
+        <table>
+            <tr><th>Gas/Molecule</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
+            <tr><td>CO₂</td><td>Headaches, fatigue, oxygen deprivation</td><td>TiO₂ photocatalysis → Converts to O₂</td></tr>
+            <tr><td>NO₂</td><td>Respiratory issues, asthma</td><td>UV-C LEDs → Breaks to nitrates + water</td></tr>
+            <tr><td>NH₃</td><td>Eye/nose irritation, burns</td><td>Blue light oxidation → Neutralized</td></tr>
+            <tr><td>Benzene/VOCs</td><td>Cancer, neurotoxicity</td><td>Nano-coating + UV → Decomposed</td></tr>
+            <tr><td>Smoke/Particles</td><td>Lung/heart disease</td><td>Electrostatic + light purification</td></tr>
+        </table>
+    </div>
+    
+    <!-- Feedback Form (Your Formspree ID Integrated!) -->
+    <div class="section">
+        <h2>📝 Report Issues</h2>
+        <form action="https://formspree.io/f/xvgeqywp" method="POST">
+            <input type="text" name="name" placeholder="Your Name *" required>
+            <input type="email" name="_replyto" placeholder="Your Email *" required>
+            <textarea name="message" placeholder="Describe the problem (e.g., sensor error, streetlight issue) *" required></textarea>
+            <button type="submit">🚀 Send Report</button>
+        </form>
+        <p style="text-align: center; opacity: 0.8;">Feedback goes straight to admin. Thanks! 🙏</p>
+    </div>
+
+    <script>
+        // Auto-update dashboard every 1s
+        function updateAll() {
+            fetch('/data')
+                .then(r => r.json())
+                .then(data => {
+                    // AQI Display
+                    const aqiEl = document.getElementById('aqi-display');
+                    aqiEl.innerHTML = `AQI: ${data.aqi} | ${data.aqi_level}`;
+                    aqiEl.style.color = data.aqi_color;
+                    
+                    document.getElementById('latest-mq').textContent = `MQ Sensor: ${data.latest_mq} (0-1023)`;
+                    
+                    // Graph
+                    const x = Array.from({length: data.mq_values.length}, (_, i) => 60 - i); // Time ago
+                    const trace = { x, y: data.mq_values, type: 'scatter', mode: 'lines+markers', 
+                                    line: {color: data.aqi_color, width: 3}, marker: {size: 6} };
+                    Plotly.newPlot('graph', [trace], {
+                        title: 'Air Pollution Levels (Higher = Worse Air)',
+                        xaxis: {title: 'Seconds Ago'},
+                        yaxis: {title: 'MQ Value'},
+                        plot_bgcolor: 'rgba(0,0,0,0.2)'
+                    });
+                });
+        }
+        setInterval(updateAll, 1000);
+        updateAll(); // Load immediately
+    </script>
+</body>
+</html>
