@@ -43,12 +43,14 @@
 <body>
     <h1>🌆 Pollution Absorbing Adaptive Lighting Streetlight</h1>
     <p style="text-align: center; opacity: 0.9;">Real-time air quality monitoring with smart purification</p>
+    <p style="text-align: center; font-size: 1.1em; opacity: 0.95;">📍 RVCE Bengaluru Campus</p>
     
     <!-- Current AQI -->
     <div class="section">
         <h2>📊 Current Air Quality</h2>
         <div id="aqi-display">AQI: -- | Level: --</div>
         <p id="latest-mq">Latest MQ Sensor Value: --</p>
+        <p id="time-info" style="text-align: center; font-size: 1.1em; margin-top: 10px;">🕐 Current Time: --</p>
     </div>
     
     <!-- Real-Time Graph -->
@@ -109,6 +111,22 @@
     <script>
         // Auto-update dashboard every 1s
         function updateAll() {
+            // Display current time
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+            
+            // Check if it's meal time
+            let mealStatus = '';
+            if (hours >= 12 && hours < 14) {
+                mealStatus = ' 🍽️ (Lunch Time - Optimized AQI)';
+            } else if (hours >= 19 && hours < 21) {
+                mealStatus = ' 🍽️ (Dinner Time - Optimized AQI)';
+            }
+            
+            document.getElementById('time-info').innerHTML = `🕐 Current Time: ${timeStr}${mealStatus}`;
+            
             fetch('/data')
                 .then(r => r.json())
                 .then(data => {
@@ -124,7 +142,7 @@
                     const trace = { x, y: data.mq_values, type: 'scatter', mode: 'lines+markers', 
                                     line: {color: data.aqi_color, width: 3}, marker: {size: 6} };
                     Plotly.newPlot('graph', [trace], {
-                        title: 'Air Pollution Levels (Higher = Worse Air)',
+                        title: 'Air Pollution Levels at RVCE Campus (Higher = Worse Air)',
                         xaxis: {title: 'Seconds Ago'},
                         yaxis: {title: 'MQ Value'},
                         plot_bgcolor: 'rgba(0,0,0,0.2)'

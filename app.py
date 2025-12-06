@@ -3,6 +3,7 @@ import threading
 import time
 import os
 import numpy as np
+from datetime import datetime
 
 # Vercel: FLAT templates + Serverless
 app = Flask(__name__, template_folder=".")
@@ -20,13 +21,65 @@ sensor_data = {
 fake_counter = 0
 
 def fake_serial_reader():
-    """Simulate Arduino data (oscillating pollution levels)"""
+    """Simulate Arduino data for RVCE Bengaluru Campus with realistic time-based patterns"""
     global fake_counter
     while True:
         fake_counter += 1
-        # Realistic simulation: 200-700 MQ values + noise
-        value = 350 + int(250 * np.sin(fake_counter * 0.08)) + np.random.randint(-80, 80)
+        
+        # Get current time (IST - Indian Standard Time, UTC+5:30)
+        now = datetime.now()
+        hour = now.hour
+        minute = now.minute
+        
+        # RVCE Bengaluru Campus realistic patterns:
+        # - Early morning (5-7): Very clean air (Good)
+        # - Morning classes (8-11): Slight increase due to traffic (Good to Moderate)
+        # - Lunch time (12-14): Keep Good-Moderate as requested
+        # - Afternoon (15-18): Moderate activity
+        # - Dinner time (19-21): Keep Good-Moderate as requested
+        # - Night (22-4): Very clean air
+        
+        # Determine base MQ value based on time of day
+        if 5 <= hour < 7:  # Early morning - very clean
+            base_mq = 180
+            variation = 40
+        elif 7 <= hour < 8:  # Morning rush hour starts
+            base_mq = 240
+            variation = 50
+        elif 8 <= hour < 12:  # Morning classes
+            base_mq = 280
+            variation = 60
+        elif 12 <= hour < 14:  # LUNCH TIME - Keep Good to Moderate (250-400)
+            base_mq = 300
+            variation = 50  # Reduced variation to keep stable
+        elif 14 <= hour < 17:  # Afternoon
+            base_mq = 320
+            variation = 70
+        elif 17 <= hour < 19:  # Evening rush hour
+            base_mq = 360
+            variation = 60
+        elif 19 <= hour < 21:  # DINNER TIME - Keep Good to Moderate (250-400)
+            base_mq = 320
+            variation = 45  # Reduced variation to keep stable
+        elif 21 <= hour < 23:  # Late evening
+            base_mq = 250
+            variation = 50
+        else:  # Night (23-5)
+            base_mq = 160
+            variation = 30
+        
+        # Add smooth oscillation for realistic variation (slower cycle)
+        smooth_wave = int(variation * 0.6 * np.sin(fake_counter * 0.05))
+        
+        # Add random noise (smaller for stability during meal times)
+        is_meal_time = (12 <= hour < 14) or (19 <= hour < 21)
+        noise_range = 20 if is_meal_time else 40
+        noise = np.random.randint(-noise_range, noise_range)
+        
+        # Calculate final value
+        value = base_mq + smooth_wave + noise
         value = max(0, min(1023, value))  # Clamp 0-1023
+        
         update_data(value)
         time.sleep(1)
 
