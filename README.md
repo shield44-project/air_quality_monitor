@@ -16,5 +16,3 @@
 - Windows: Device Manager → COM?
 - Linux: `ls /dev/ttyUSB*`
 - Mac: `ls /dev/cu.*`
-
-Fake data auto-enabled if no Arduino.
