@@ -62,13 +62,13 @@
         <h2>🧪 Detected Gases & PPM Levels (MQ-135 Sensor)</h2>
         <table id="gas-table">
             <thead>
-                <tr><th>Gas/Molecule</th><th>Current Detected</th><th>Normal Air (PPM)</th><th>Detection Range (PPM)</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
+                <tr><th>Gas/Molecule</th><th>Current Detected</th><th>Normal Air Baseline</th><th>Detection Range (PPM)</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
             </thead>
             <tbody>
                 <tr>
                     <td data-label="Gas/Molecule">CO₂ (Carbon Dioxide)</td>
                     <td data-label="Current Detected" id="gas-co2">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">400</td>
+                    <td data-label="Normal Air Baseline">400</td>
                     <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Headaches, fatigue, oxygen deprivation</td>
                     <td data-label="Streetlight Solution">TiO₂ photocatalysis → Converts to O₂</td>
@@ -76,7 +76,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">CO (Carbon Monoxide)</td>
                     <td data-label="Current Detected" id="gas-co">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.1</td>
+                    <td data-label="Normal Air Baseline">&lt;1 ppm</td>
                     <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Poisoning, brain damage, death</td>
                     <td data-label="Streetlight Solution">Catalytic oxidation → CO₂</td>
@@ -84,7 +84,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">NO₂ (Nitrogen Dioxide)</td>
                     <td data-label="Current Detected" id="gas-no2">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.02</td>
+                    <td data-label="Normal Air Baseline">0.02</td>
                     <td data-label="Detection Range (PPM)">0.1 - 10</td>
                     <td data-label="Health Risks">Respiratory issues, asthma</td>
                     <td data-label="Streetlight Solution">UV-C LEDs → Breaks to nitrates + water</td>
@@ -92,7 +92,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">NH₃ (Ammonia)</td>
                     <td data-label="Current Detected" id="gas-nh3">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.01</td>
+                    <td data-label="Normal Air Baseline">0.01</td>
                     <td data-label="Detection Range (PPM)">10 - 300</td>
                     <td data-label="Health Risks">Eye/nose irritation, burns</td>
                     <td data-label="Streetlight Solution">Blue light oxidation → Neutralized</td>
@@ -100,7 +100,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">Benzene (C₆H₆)</td>
                     <td data-label="Current Detected" id="gas-benzene">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.005</td>
+                    <td data-label="Normal Air Baseline">0.005</td>
                     <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Cancer, neurotoxicity</td>
                     <td data-label="Streetlight Solution">Nano-coating + UV → Decomposed</td>
@@ -108,7 +108,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">Toluene (C₇H₈)</td>
                     <td data-label="Current Detected" id="gas-toluene">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.01</td>
+                    <td data-label="Normal Air Baseline">0.01</td>
                     <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Dizziness, confusion, liver damage</td>
                     <td data-label="Streetlight Solution">Photocatalytic breakdown → Safe compounds</td>
@@ -116,7 +116,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">Alcohol (Ethanol)</td>
                     <td data-label="Current Detected" id="gas-alcohol">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0</td>
+                    <td data-label="Normal Air Baseline">0</td>
                     <td data-label="Detection Range (PPM)">10 - 500</td>
                     <td data-label="Health Risks">Intoxication, respiratory irritation</td>
                     <td data-label="Streetlight Solution">UV oxidation → Acetaldehyde + water</td>
@@ -124,7 +124,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">Acetone (C₃H₆O)</td>
                     <td data-label="Current Detected" id="gas-acetone">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0.02</td>
+                    <td data-label="Normal Air Baseline">0.02</td>
                     <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Headaches, nausea, CNS depression</td>
                     <td data-label="Streetlight Solution">Advanced oxidation → CO₂ + H₂O</td>
@@ -132,7 +132,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">H₂S (Hydrogen Sulfide)</td>
                     <td data-label="Current Detected" id="gas-h2s">-- ppm</td>
-                    <td data-label="Normal Air (PPM)">0</td>
+                    <td data-label="Normal Air Baseline">0</td>
                     <td data-label="Detection Range (PPM)">1 - 100</td>
                     <td data-label="Health Risks">Rotten egg smell, toxicity, death</td>
                     <td data-label="Streetlight Solution">UV + catalyst → Sulfur compounds neutralized</td>
@@ -140,7 +140,7 @@
                 <tr>
                     <td data-label="Gas/Molecule">Smoke/Particles (PM2.5)</td>
                     <td data-label="Current Detected" id="gas-smoke">-- μg/m³</td>
-                    <td data-label="Normal Air (PPM)">0 - 12 μg/m³</td>
+                    <td data-label="Normal Air Baseline">0 - 12 μg/m³</td>
                     <td data-label="Detection Range (PPM)">Detects presence</td>
                     <td data-label="Health Risks">Lung/heart disease</td>
                     <td data-label="Streetlight Solution">Electrostatic + light purification</td>
@@ -148,7 +148,7 @@
             </tbody>
         </table>
         <p style="text-align: center; opacity: 0.8; margin-top: 15px;">
-            <strong>Note:</strong> MQ-135 sensor detects gas concentrations relative to clean air. PPM = Parts Per Million. Normal air values are typical outdoor baseline levels.
+            <strong>Note:</strong> MQ-135 sensor detects gas concentrations relative to clean air. PPM = Parts Per Million. Normal air baselines are typical outdoor levels. Some gases have detection ranges above normal air levels due to sensor sensitivity thresholds.
         </p>
     </div>
     
