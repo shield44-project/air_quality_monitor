@@ -26,10 +26,11 @@ def fake_serial_reader():
     while True:
         fake_counter += 1
         
-        # Get current time (IST - Indian Standard Time, UTC+5:30)
+        # Get current time in IST (Indian Standard Time, UTC+5:30)
+        # Note: Server should be configured to IST timezone, or use pytz for explicit conversion
+        # For simplicity, using system local time (ensure server is set to IST)
         now = datetime.now()
         hour = now.hour
-        minute = now.minute
         
         # RVCE Bengaluru Campus realistic patterns:
         # - Early morning (5-7): Very clean air (Good)

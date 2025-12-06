@@ -112,6 +112,8 @@
         // Auto-update dashboard every 1s
         function updateAll() {
             // Display current time
+            // Note: Uses client's local timezone. For production, consider using server time
+            // or explicitly converting to IST (UTC+5:30) for consistency with backend
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes().toString().padStart(2, '0');
