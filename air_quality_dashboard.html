@@ -53,45 +53,103 @@
     
     <!-- Real-Time Graph -->
     <div class="section">
-        <h2>📈 Real-Time Graph (Last 60 Seconds)</h2>
+        <h2>📈 Real-Time Graph (Last 15 Seconds)</h2>
         <div id="graph"></div>
     </div>
     
     <!-- Gases Table -->
     <div class="section">
-        <h2>🧪 Detected Gases & How We Fix Them (MQ-135 Sensor)</h2>
-        <table>
+        <h2>🧪 Detected Gases & PPM Levels (MQ-135 Sensor)</h2>
+        <table id="gas-table">
             <thead>
-                <tr><th>Gas/Molecule</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
+                <tr><th>Gas/Molecule</th><th>Current Detected</th><th>Normal Air Baseline</th><th>Detection Range (PPM)</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
             </thead>
             <tbody>
                 <tr>
-                    <td data-label="Gas/Molecule">CO₂</td>
+                    <td data-label="Gas/Molecule">CO₂ (Carbon Dioxide)</td>
+                    <td data-label="Current Detected" id="gas-co2">-- ppm</td>
+                    <td data-label="Normal Air Baseline">400</td>
+                    <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Headaches, fatigue, oxygen deprivation</td>
-                    <td data-label="Streetlight Solution">TiO₂ photocatalysis → Converts to O₂</td>
+                    <td data-label="Streetlight Solution">Filtered and diluted by airflow</td>
                 </tr>
                 <tr>
-                    <td data-label="Gas/Molecule">NO₂</td>
+                    <td data-label="Gas/Molecule">CO (Carbon Monoxide)</td>
+                    <td data-label="Current Detected" id="gas-co">-- ppm</td>
+                    <td data-label="Normal Air Baseline">&lt;1 ppm</td>
+                    <td data-label="Detection Range (PPM)">10 - 1000</td>
+                    <td data-label="Health Risks">Poisoning, brain damage, death</td>
+                    <td data-label="Streetlight Solution">Captured by activated carbon filter</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">NO₂ (Nitrogen Dioxide)</td>
+                    <td data-label="Current Detected" id="gas-no2">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.02</td>
+                    <td data-label="Detection Range (PPM)">0.1 - 10</td>
                     <td data-label="Health Risks">Respiratory issues, asthma</td>
-                    <td data-label="Streetlight Solution">UV-C LEDs → Breaks to nitrates + water</td>
+                    <td data-label="Streetlight Solution">Reduced through filtration system</td>
                 </tr>
                 <tr>
-                    <td data-label="Gas/Molecule">NH₃</td>
+                    <td data-label="Gas/Molecule">NH₃ (Ammonia)</td>
+                    <td data-label="Current Detected" id="gas-nh3">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.01</td>
+                    <td data-label="Detection Range (PPM)">10 - 300</td>
                     <td data-label="Health Risks">Eye/nose irritation, burns</td>
-                    <td data-label="Streetlight Solution">Blue light oxidation → Neutralized</td>
+                    <td data-label="Streetlight Solution">Absorbed by chemical filter media</td>
                 </tr>
                 <tr>
-                    <td data-label="Gas/Molecule">Benzene/VOCs</td>
+                    <td data-label="Gas/Molecule">Benzene (C₆H₆)</td>
+                    <td data-label="Current Detected" id="gas-benzene">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.005</td>
+                    <td data-label="Detection Range (PPM)">10 - 1000</td>
                     <td data-label="Health Risks">Cancer, neurotoxicity</td>
-                    <td data-label="Streetlight Solution">Nano-coating + UV → Decomposed</td>
+                    <td data-label="Streetlight Solution">Trapped by multi-layer filter mesh</td>
                 </tr>
                 <tr>
-                    <td data-label="Gas/Molecule">Smoke/Particles</td>
+                    <td data-label="Gas/Molecule">Toluene (C₇H₈)</td>
+                    <td data-label="Current Detected" id="gas-toluene">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.01</td>
+                    <td data-label="Detection Range (PPM)">10 - 1000</td>
+                    <td data-label="Health Risks">Dizziness, confusion, liver damage</td>
+                    <td data-label="Streetlight Solution">Trapped by multi-layer filter mesh</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">Alcohol (Ethanol)</td>
+                    <td data-label="Current Detected" id="gas-alcohol">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0</td>
+                    <td data-label="Detection Range (PPM)">10 - 500</td>
+                    <td data-label="Health Risks">Intoxication, respiratory irritation</td>
+                    <td data-label="Streetlight Solution">Dispersed by ventilation fan</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">Acetone (C₃H₆O)</td>
+                    <td data-label="Current Detected" id="gas-acetone">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.02</td>
+                    <td data-label="Detection Range (PPM)">10 - 1000</td>
+                    <td data-label="Health Risks">Headaches, nausea, CNS depression</td>
+                    <td data-label="Streetlight Solution">Removed by activated carbon filter</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">H₂S (Hydrogen Sulfide)</td>
+                    <td data-label="Current Detected" id="gas-h2s">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0</td>
+                    <td data-label="Detection Range (PPM)">1 - 100</td>
+                    <td data-label="Health Risks">Rotten egg smell, toxicity, death</td>
+                    <td data-label="Streetlight Solution">Neutralized by chemical filter</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">Smoke/Particles (PM2.5)</td>
+                    <td data-label="Current Detected" id="gas-smoke">-- μg/m³</td>
+                    <td data-label="Normal Air Baseline">0 - 12 μg/m³</td>
+                    <td data-label="Detection Range (PPM)">Detects presence</td>
                     <td data-label="Health Risks">Lung/heart disease</td>
-                    <td data-label="Streetlight Solution">Electrostatic + light purification</td>
+                    <td data-label="Streetlight Solution">Captured by fine mesh filter</td>
                 </tr>
             </tbody>
         </table>
+        <p style="text-align: center; opacity: 0.8; margin-top: 15px;">
+            <strong>Note:</strong> MQ-135 sensor detects gas concentrations relative to clean air. PPM = Parts Per Million. Normal air baselines are typical outdoor levels. Some gases have detection ranges above normal air levels due to sensor sensitivity thresholds.
+        </p>
     </div>
     
     <!-- Feedback Form (Your Formspree ID Integrated!) -->
@@ -119,16 +177,36 @@
                     
                     document.getElementById('latest-mq').textContent = `MQ Sensor: ${data.latest_mq} (0-1023)`;
                     
-                    // Graph
-                    const x = Array.from({length: data.mq_values.length}, (_, i) => 60 - i); // Time ago
-                    const trace = { x, y: data.mq_values, type: 'scatter', mode: 'lines+markers', 
-                                    line: {color: data.aqi_color, width: 3}, marker: {size: 6} };
-                    Plotly.newPlot('graph', [trace], {
-                        title: 'Air Pollution Levels (Higher = Worse Air)',
-                        xaxis: {title: 'Seconds Ago'},
-                        yaxis: {title: 'MQ Value'},
-                        plot_bgcolor: 'rgba(0,0,0,0.2)'
-                    });
+                    // Graph (with error handling for Plotly)
+                    try {
+                        if (typeof Plotly !== 'undefined') {
+                            const x = Array.from({length: data.mq_values.length}, (_, i) => 15 - i); // Time ago
+                            const trace = { x, y: data.mq_values, type: 'scatter', mode: 'lines+markers', 
+                                            line: {color: data.aqi_color, width: 3}, marker: {size: 6} };
+                            Plotly.newPlot('graph', [trace], {
+                                title: 'Air Pollution Levels (Higher = Worse Air)',
+                                xaxis: {title: 'Seconds Ago'},
+                                yaxis: {title: 'MQ Value'},
+                                plot_bgcolor: 'rgba(0,0,0,0.2)'
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Plotly error:', e);
+                    }
+                    
+                    // Update gas levels table
+                    if (data.gas_levels) {
+                        document.getElementById('gas-co2').textContent = data.gas_levels.co2 + ' ppm';
+                        document.getElementById('gas-co').textContent = data.gas_levels.co + ' ppm';
+                        document.getElementById('gas-no2').textContent = data.gas_levels.no2 + ' ppm';
+                        document.getElementById('gas-nh3').textContent = data.gas_levels.nh3 + ' ppm';
+                        document.getElementById('gas-benzene').textContent = data.gas_levels.benzene + ' ppm';
+                        document.getElementById('gas-toluene').textContent = data.gas_levels.toluene + ' ppm';
+                        document.getElementById('gas-alcohol').textContent = data.gas_levels.alcohol + ' ppm';
+                        document.getElementById('gas-acetone').textContent = data.gas_levels.acetone + ' ppm';
+                        document.getElementById('gas-h2s').textContent = data.gas_levels.h2s + ' ppm';
+                        document.getElementById('gas-smoke').textContent = data.gas_levels.smoke + ' μg/m³';
+                    }
                 });
         }
         setInterval(updateAll, 1000);
