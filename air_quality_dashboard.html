@@ -21,6 +21,23 @@
         button { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; cursor: pointer; font-weight: bold; transition: transform 0.2s; }
         button:hover { transform: scale(1.02); }
         #graph { background: rgba(0,0,0,0.3); border-radius: 10px; }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.3em; }
+            .section { padding: 15px; margin: 15px 0; }
+            #aqi-display { font-size: 2em; padding: 15px; }
+            #latest-mq { font-size: 1em; }
+            
+            /* Responsive table - stack on mobile */
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { margin-bottom: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; }
+            td { border: none; position: relative; padding-left: 50%; text-align: right; }
+            td:before { content: attr(data-label); position: absolute; left: 10px; width: 45%; padding-right: 10px; text-align: left; font-weight: bold; }
+        }
     </style>
 </head>
 <body>
@@ -44,12 +61,36 @@
     <div class="section">
         <h2>🧪 Detected Gases & How We Fix Them (MQ-135 Sensor)</h2>
         <table>
-            <tr><th>Gas/Molecule</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
-            <tr><td>CO₂</td><td>Headaches, fatigue, oxygen deprivation</td><td>TiO₂ photocatalysis → Converts to O₂</td></tr>
-            <tr><td>NO₂</td><td>Respiratory issues, asthma</td><td>UV-C LEDs → Breaks to nitrates + water</td></tr>
-            <tr><td>NH₃</td><td>Eye/nose irritation, burns</td><td>Blue light oxidation → Neutralized</td></tr>
-            <tr><td>Benzene/VOCs</td><td>Cancer, neurotoxicity</td><td>Nano-coating + UV → Decomposed</td></tr>
-            <tr><td>Smoke/Particles</td><td>Lung/heart disease</td><td>Electrostatic + light purification</td></tr>
+            <thead>
+                <tr><th>Gas/Molecule</th><th>Health Risks</th><th>Streetlight Solution</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Gas/Molecule">CO₂</td>
+                    <td data-label="Health Risks">Headaches, fatigue, oxygen deprivation</td>
+                    <td data-label="Streetlight Solution">TiO₂ photocatalysis → Converts to O₂</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">NO₂</td>
+                    <td data-label="Health Risks">Respiratory issues, asthma</td>
+                    <td data-label="Streetlight Solution">UV-C LEDs → Breaks to nitrates + water</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">NH₃</td>
+                    <td data-label="Health Risks">Eye/nose irritation, burns</td>
+                    <td data-label="Streetlight Solution">Blue light oxidation → Neutralized</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">Benzene/VOCs</td>
+                    <td data-label="Health Risks">Cancer, neurotoxicity</td>
+                    <td data-label="Streetlight Solution">Nano-coating + UV → Decomposed</td>
+                </tr>
+                <tr>
+                    <td data-label="Gas/Molecule">Smoke/Particles</td>
+                    <td data-label="Health Risks">Lung/heart disease</td>
+                    <td data-label="Streetlight Solution">Electrostatic + light purification</td>
+                </tr>
+            </tbody>
         </table>
     </div>
     
