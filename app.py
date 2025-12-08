@@ -7,7 +7,7 @@ import numpy as np
 # Vercel: FLAT templates + Serverless
 app = Flask(__name__, template_folder=".")
 
-# Global data (thread-safe)
+# Global data (GIL-protected for single-threaded read/write pattern)
 sensor_data = {
     "mq_values": [],
     "latest_mq": 0,
@@ -19,15 +19,72 @@ sensor_data = {
 
 # FAKE DATA MODE (Vercel + Local demo)
 fake_counter = 0
+current_base = 350  # Starting baseline
+target_base = 350   # Target baseline for smooth transitions
+last_event_time = time.time()
+MAX_ANALOG_VALUE = 1023  # Arduino analog input range (0-1023)
 
 def fake_serial_reader():
-    """Simulate Arduino data (oscillating pollution levels)"""
-    global fake_counter
+    """Simulate Arduino data with realistic pollution patterns"""
+    global fake_counter, current_base, target_base, last_event_time
+    
     while True:
         fake_counter += 1
-        # Realistic simulation: 200-700 MQ values + noise
-        value = 350 + int(250 * np.sin(fake_counter * 0.08)) + np.random.randint(-80, 80)
-        value = max(0, min(1023, value))  # Clamp 0-1023
+        current_time = time.time()
+        hour = time.localtime().tm_hour
+        
+        # 1. Time-based baseline (daily patterns)
+        time_baseline = 300  # Base clean air
+        if 7 <= hour <= 9:  # Morning rush hour
+            time_baseline = 450
+        elif 12 <= hour <= 14:  # Lunch time (moderate)
+            time_baseline = 380
+        elif 17 <= hour <= 19:  # Evening rush hour
+            time_baseline = 500
+        elif 22 <= hour or hour <= 5:  # Night time (clean)
+            time_baseline = 250
+        else:  # Rest of day
+            time_baseline = 350
+        
+        # 2. Random events (pollution spikes/dips every 20-60 seconds)
+        if current_time - last_event_time > np.random.uniform(20, 60):
+            event_type = np.random.choice(['spike', 'dip', 'gradual_increase', 'gradual_decrease', 'none'], 
+                                         p=[0.15, 0.10, 0.15, 0.15, 0.45])
+            
+            if event_type == 'spike':  # Sudden pollution (e.g., vehicle passing)
+                target_base = min(700, time_baseline + np.random.randint(100, 250))
+            elif event_type == 'dip':  # Sudden clean air (e.g., wind gust)
+                target_base = max(200, time_baseline - np.random.randint(80, 150))
+            elif event_type == 'gradual_increase':
+                target_base = min(650, time_baseline + np.random.randint(50, 150))
+            elif event_type == 'gradual_decrease':
+                target_base = max(250, time_baseline - np.random.randint(50, 120))
+            else:  # Return to time-based normal
+                target_base = time_baseline
+            
+            last_event_time = current_time
+        
+        # 3. Smooth transition to target (realistic gradual change)
+        transition_speed = 0.05  # Slower = more realistic
+        if abs(current_base - target_base) > 1:
+            current_base += (target_base - current_base) * transition_speed
+        else:
+            current_base = target_base
+        
+        # 4. Natural oscillation (breathing pattern)
+        oscillation = 30 * np.sin(fake_counter * 0.05)
+        
+        # 5. Small random noise (sensor fluctuation)
+        noise = np.random.uniform(-15, 15)
+        
+        # 6. Occasional micro-spikes (realistic sensor behavior)
+        if np.random.random() < 0.05:  # 5% chance
+            noise += np.random.uniform(20, 50)
+        
+        # Final value calculation
+        value = int(current_base + oscillation + noise)
+        value = max(0, min(MAX_ANALOG_VALUE, value))  # Clamp to valid sensor range
+        
         update_data(value)
         time.sleep(1)
 
@@ -35,7 +92,7 @@ def calculate_gas_levels(raw_mq):
     """Calculate individual gas concentrations based on MQ-135 sensor reading.
     Simulates realistic urban campus environment values."""
     # Normalize MQ reading to 0-1 range for calculation
-    mq_ratio = raw_mq / 1023.0
+    mq_ratio = raw_mq / MAX_ANALOG_VALUE
     
     # Base pollution factor (campus environment: moderate baseline with variations)
     pollution_factor = max(0.3, min(2.0, mq_ratio * 2.5))
