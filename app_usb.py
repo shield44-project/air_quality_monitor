@@ -9,7 +9,7 @@ import numpy as np
 # Flask app with FLAT template folder structure
 app = Flask(__name__, template_folder=".")
 
-# Global data (thread-safe)
+# Global data (GIL-protected for single-threaded read/write pattern)
 sensor_data = {
     "mq_values": [],
     "latest_mq": 0,
@@ -22,21 +22,35 @@ sensor_data = {
 # Serial connection
 ser = None
 SERIAL_PORT = None  # Auto-detect or set manually
+BAUD_RATE = 9600    # Standard Arduino serial baud rate
+MAX_ANALOG_VALUE = 1023  # Arduino analog input range (0-1023)
 
 def find_arduino_port():
     """Auto-detect Arduino COM port"""
     ports = serial.tools.list_ports.comports()
+    
+    # Priority 1: Look for explicit Arduino identifiers
     for port in ports:
-        # Look for common Arduino identifiers
-        if 'Arduino' in port.description or 'CH340' in port.description or 'USB' in port.description:
-            print(f"🔍 Found potential Arduino on: {port.device} - {port.description}")
+        description_lower = port.description.lower()
+        if any(keyword in description_lower for keyword in ['arduino', 'uno', 'nano', 'mega']):
+            print(f"🔍 Found Arduino on: {port.device} - {port.description}")
             return port.device
     
-    # Fallback: return first available port
-    if ports:
-        print(f"⚠️ No Arduino detected. Trying first port: {ports[0].device}")
-        return ports[0].device
+    # Priority 2: Look for common Arduino USB-to-Serial chips
+    for port in ports:
+        description_lower = port.description.lower()
+        if any(chip in description_lower for chip in ['ch340', 'ch341', 'cp210', 'ftdi', 'pl2303']):
+            print(f"🔍 Found potential Arduino (USB chip) on: {port.device} - {port.description}")
+            return port.device
     
+    # Priority 3: Look for generic USB serial devices (less reliable)
+    for port in ports:
+        if 'usb' in port.device.lower() or 'tty' in port.device.lower():
+            print(f"⚠️ Found generic USB serial device: {port.device} - {port.description}")
+            print(f"💡 If this is not your Arduino, manually set SERIAL_PORT on line 23")
+            return port.device
+    
+    # No ports found
     return None
 
 def connect_serial():
@@ -51,7 +65,7 @@ def connect_serial():
         return False
     
     try:
-        ser = serial.Serial(SERIAL_PORT, 9600, timeout=1)
+        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
         time.sleep(2)  # Wait for Arduino to initialize
         print(f"✅ Connected to Arduino on {SERIAL_PORT}")
         print(f"💡 Warming up MQ-135 sensor (30 seconds recommended)...")
@@ -87,8 +101,8 @@ def read_serial():
                 if line.startswith("MQ:"):
                     try:
                         value = int(line.split(":")[1])
-                        # Validate range (MQ-135 analog reading is 0-1023)
-                        if 0 <= value <= 1023:
+                        # Validate range (Arduino analog reading is 0-1023)
+                        if 0 <= value <= MAX_ANALOG_VALUE:
                             update_data(value)
                             consecutive_errors = 0  # Reset error counter on success
                         else:
@@ -121,7 +135,7 @@ def calculate_gas_levels(raw_mq):
     """Calculate individual gas concentrations based on MQ-135 sensor reading.
     Simulates realistic urban campus environment values."""
     # Normalize MQ reading to 0-1 range for calculation
-    mq_ratio = raw_mq / 1023.0
+    mq_ratio = raw_mq / MAX_ANALOG_VALUE
     
     # Base pollution factor (campus environment: moderate baseline with variations)
     pollution_factor = max(0.3, min(2.0, mq_ratio * 2.5))

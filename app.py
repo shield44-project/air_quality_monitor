@@ -7,7 +7,7 @@ import numpy as np
 # Vercel: FLAT templates + Serverless
 app = Flask(__name__, template_folder=".")
 
-# Global data (thread-safe)
+# Global data (GIL-protected for single-threaded read/write pattern)
 sensor_data = {
     "mq_values": [],
     "latest_mq": 0,
@@ -22,6 +22,7 @@ fake_counter = 0
 current_base = 350  # Starting baseline
 target_base = 350   # Target baseline for smooth transitions
 last_event_time = time.time()
+MAX_ANALOG_VALUE = 1023  # Arduino analog input range (0-1023)
 
 def fake_serial_reader():
     """Simulate Arduino data with realistic pollution patterns"""
@@ -82,7 +83,7 @@ def fake_serial_reader():
         
         # Final value calculation
         value = int(current_base + oscillation + noise)
-        value = max(0, min(1023, value))  # Clamp to valid sensor range
+        value = max(0, min(MAX_ANALOG_VALUE, value))  # Clamp to valid sensor range
         
         update_data(value)
         time.sleep(1)
@@ -91,7 +92,7 @@ def calculate_gas_levels(raw_mq):
     """Calculate individual gas concentrations based on MQ-135 sensor reading.
     Simulates realistic urban campus environment values."""
     # Normalize MQ reading to 0-1 range for calculation
-    mq_ratio = raw_mq / 1023.0
+    mq_ratio = raw_mq / MAX_ANALOG_VALUE
     
     # Base pollution factor (campus environment: moderate baseline with variations)
     pollution_factor = max(0.3, min(2.0, mq_ratio * 2.5))
