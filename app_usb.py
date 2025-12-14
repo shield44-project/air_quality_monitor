@@ -187,11 +187,11 @@ def update_data(raw_mq):
     # Calculate individual gas levels
     sensor_data["gas_levels"] = calculate_gas_levels(raw_mq)
     
-    # AQI calculation (calibrated for MQ-135 sensor with 90-100 range)
+    # AQI calculation (calibrated for MQ-135 sensor, Moderate range: 90-100)
     if raw_mq < 250: 
         aqi, level, color = 30, "Good 🟢", "green"
     elif raw_mq < 450:
-        # Linear interpolation within Moderate range: 250-449 maps to AQI 90-100
+        # Linear interpolation within Moderate range: 250-449 (inclusive) maps to AQI 90-100
         # Formula: AQI = 90 + ((raw_mq - 250) / 200) * 10
         aqi = int(90 + ((raw_mq - 250) / 200) * 10)
         aqi = max(90, min(100, aqi))  # Clamp to 90-100 range
