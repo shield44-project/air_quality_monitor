@@ -90,6 +90,14 @@
                     <td data-label="Streetlight Solution">Reduced through filtration system</td>
                 </tr>
                 <tr>
+                    <td data-label="Gas/Molecule">SO₂ (Sulfur Dioxide)</td>
+                    <td data-label="Current Detected" id="gas-so2">-- ppm</td>
+                    <td data-label="Normal Air Baseline">0.005</td>
+                    <td data-label="Detection Range (PPM)">0.005 - 0.15</td>
+                    <td data-label="Health Risks">Respiratory irritation, asthma, acid rain</td>
+                    <td data-label="Streetlight Solution">Neutralized by alkaline filter media</td>
+                </tr>
+                <tr>
                     <td data-label="Gas/Molecule">NH₃ (Ammonia)</td>
                     <td data-label="Current Detected" id="gas-nh3">-- ppm</td>
                     <td data-label="Normal Air Baseline">0.01</td>
@@ -199,6 +207,7 @@
                         document.getElementById('gas-co2').textContent = data.gas_levels.co2 + ' ppm';
                         document.getElementById('gas-co').textContent = data.gas_levels.co + ' ppm';
                         document.getElementById('gas-no2').textContent = data.gas_levels.no2 + ' ppm';
+                        document.getElementById('gas-so2').textContent = data.gas_levels.so2 + ' ppm';
                         document.getElementById('gas-nh3').textContent = data.gas_levels.nh3 + ' ppm';
                         document.getElementById('gas-benzene').textContent = data.gas_levels.benzene + ' ppm';
                         document.getElementById('gas-toluene').textContent = data.gas_levels.toluene + ' ppm';
