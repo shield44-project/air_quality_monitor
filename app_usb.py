@@ -153,6 +153,7 @@ def calculate_gas_levels(raw_mq):
         "co2": round(400 + (mq_ratio * 200 * time_factor) + np.random.uniform(-20, 20), 1),  # 400-650 ppm
         "co": round(0.1 + (mq_ratio * 5 * time_factor) + np.random.uniform(-0.5, 0.5), 2),  # 0.1-5 ppm
         "no2": round(0.02 + (mq_ratio * 0.15 * time_factor) + np.random.uniform(-0.01, 0.01), 3),  # 0.02-0.2 ppm
+        "so2": round(0.005 + (mq_ratio * 0.1 * time_factor) + np.random.uniform(-0.005, 0.005), 3),  # 0.005-0.1 ppm
         "nh3": round(0.01 + (mq_ratio * 2 * pollution_factor) + np.random.uniform(-0.2, 0.2), 2),  # 0.01-2 ppm
         "benzene": round(0.005 + (mq_ratio * 0.05 * pollution_factor) + np.random.uniform(-0.005, 0.005), 3),  # 0.005-0.06 ppm
         "toluene": round(0.01 + (mq_ratio * 0.08 * pollution_factor) + np.random.uniform(-0.01, 0.01), 3),  # 0.01-0.09 ppm
@@ -166,6 +167,7 @@ def calculate_gas_levels(raw_mq):
     gas_levels["co2"] = max(400, min(700, gas_levels["co2"]))
     gas_levels["co"] = max(0.1, min(8, gas_levels["co"]))
     gas_levels["no2"] = max(0.02, min(0.25, gas_levels["no2"]))
+    gas_levels["so2"] = max(0.005, min(0.15, gas_levels["so2"]))
     gas_levels["nh3"] = max(0.01, min(3, gas_levels["nh3"]))
     gas_levels["benzene"] = max(0.005, min(0.08, gas_levels["benzene"]))
     gas_levels["toluene"] = max(0.01, min(0.12, gas_levels["toluene"]))
