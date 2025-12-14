@@ -153,7 +153,7 @@ def calculate_gas_levels(raw_mq):
         "co2": round(400 + (mq_ratio * 200 * time_factor) + np.random.uniform(-20, 20), 1),  # 400-650 ppm
         "co": round(0.1 + (mq_ratio * 5 * time_factor) + np.random.uniform(-0.5, 0.5), 2),  # 0.1-5 ppm
         "no2": round(0.02 + (mq_ratio * 0.15 * time_factor) + np.random.uniform(-0.01, 0.01), 3),  # 0.02-0.2 ppm
-        "so2": round(0.005 + (mq_ratio * 0.1 * time_factor) + np.random.uniform(-0.005, 0.005), 3),  # 0.005-0.1 ppm
+        "so2": round(0.005 + (mq_ratio * 0.1 * time_factor) + np.random.uniform(-0.005, 0.005), 3),  # 0.005-0.15 ppm
         "nh3": round(0.01 + (mq_ratio * 2 * pollution_factor) + np.random.uniform(-0.2, 0.2), 2),  # 0.01-2 ppm
         "benzene": round(0.005 + (mq_ratio * 0.05 * pollution_factor) + np.random.uniform(-0.005, 0.005), 3),  # 0.005-0.06 ppm
         "toluene": round(0.01 + (mq_ratio * 0.08 * pollution_factor) + np.random.uniform(-0.01, 0.01), 3),  # 0.01-0.09 ppm
@@ -194,8 +194,8 @@ def update_data(raw_mq):
         aqi, level, color = 30, "Good 🟢", "green"
     elif raw_mq < 450:
         # Linear interpolation within Moderate range: 250-449 (inclusive) maps to AQI 90-100
-        # Formula: AQI = 90 + ((raw_mq - 250) / 200) * 10
-        aqi = int(90 + ((raw_mq - 250) / 200) * 10)
+        # Formula: AQI = 90 + ((raw_mq - 250) / 199) * 10
+        aqi = int(90 + ((raw_mq - 250) / 199) * 10)
         aqi = max(90, min(100, aqi))  # Clamp to 90-100 range
         level, color = "Moderate 🟡", "yellow"
     elif raw_mq < 650: 
